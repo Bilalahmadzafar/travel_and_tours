@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:travel_and_tours/views/destination_page.dart';
 import '../models/destination_model.dart';
 
-
 class DestinationCard extends StatelessWidget {
   final Destination destination;
 
@@ -17,6 +16,7 @@ class DestinationCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DestinationPage(destination: destination),
+
           ),
         );
       },

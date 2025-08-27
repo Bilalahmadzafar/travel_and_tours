@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/destination_model.dart';
+import '../services/favorites_manager.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -17,22 +18,18 @@ class _DestinationPageState extends State<DestinationPage>
     with TickerProviderStateMixin {
   late final AnimationController _imageController;
   late final AnimationController _textController;
-
   late final Animation<Offset> _imageOffset;
   late final Animation<Offset> _textOffset;
-
   late final Animation<double> _imageOpacity;
   late final Animation<double> _textOpacity;
 
   @override
   void initState() {
     super.initState();
-
     _imageController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-
     _textController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -41,18 +38,22 @@ class _DestinationPageState extends State<DestinationPage>
     _imageOffset = Tween<Offset>(
       begin: const Offset(0, 0.2),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _imageController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _imageController,
+        curve: Curves.easeOut,
+      ),
+    );
 
     _textOffset = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _textController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _textController,
+        curve: Curves.easeOut,
+      ),
+    );
 
     _imageOpacity = CurvedAnimation(
       parent: _imageController,
@@ -117,9 +118,34 @@ class _DestinationPageState extends State<DestinationPage>
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       destination.description ?? "No description yet...",
-                      style: const TextStyle(fontSize: 16, height: 1.5),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                      ),
                       textAlign: TextAlign.justify,
                     ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  FavoritesManager.add(destination);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${destination.title} added to favorites'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.favorite_border),
+                label: const Text('Add to Favorites'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),

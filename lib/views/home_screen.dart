@@ -4,8 +4,6 @@ import '../view_models/home_view_model.dart';
 import '../widgets/destination_card.dart';
 import 'favorites_page.dart';
 
-
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -33,14 +31,14 @@ class HomeScreen extends StatelessWidget {
             ),
 
             flexibleSpace: FlexibleSpaceBar(
-             // title: const Text('Select Destination'),
+              // title: const Text('Select Destination'),
               background: ClipRRect(
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(24),
                   bottomRight: Radius.circular(24),
                 ),
                 child: Image.asset(
-                  'assets/roberto-nickson-resort-medium.jpg', // <- Put a scenic image here
+                  'assets/roberto-nickson-resort-medium.jpg', // <- Scenic image
                   fit: BoxFit.cover,
                 ),
               ),
