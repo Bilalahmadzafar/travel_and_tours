@@ -1,3 +1,22 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.3.2" // Android Gradle Plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0" // Kotlin plugin to match Firebase Auth
+        classpath "com.google.gms:google-services:4.4.2" // Google Services
+    }
+}
+
+plugins {
+    // ...
+    // Add the dependency for the Google services Gradle plugin
+    id 'com.google.gms.google-services' version '4.4.3' apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -6,10 +25,9 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 

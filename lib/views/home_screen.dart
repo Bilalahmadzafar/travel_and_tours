@@ -14,14 +14,15 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // 🌄 Sliver AppBar with background image
+          // 🌄 Sliver AppBar with image and overlay
           SliverAppBar(
             expandedHeight: 250.0,
             pinned: true,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Theme.of(context).primaryColor,
 
             leading: IconButton(
-              icon: const Icon(Icons.favorite, color: Colors.yellow, size: 28),
+              icon: const Icon(Icons.favorite),
+              color: Theme.of(context).colorScheme.secondary, // Amber Glow
               onPressed: () {
                 Navigator.push(
                   context,
@@ -31,36 +32,52 @@ class HomeScreen extends StatelessWidget {
             ),
 
             flexibleSpace: FlexibleSpaceBar(
-              // title: const Text('Select Destination'),
-              background: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-                child: Image.asset(
-                  'assets/roberto-nickson-resort-medium.jpg', // <- Scenic image
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-
-          // 🔘 Filter chips
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              child: Wrap(
-                spacing: 10,
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  _buildFilterChip("Hiking"),
-                  _buildFilterChip("Kayaking"),
-                  _buildFilterChip("Biking"),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(24),
+                      bottomRight: Radius.circular(24),
+                    ),
+                    child: Image.asset(
+                      'assets/roberto-nickson-resort-medium.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor.withOpacity(0.6),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
 
-          // 🗺️ Destination cards from ViewModel
+          // 🔘 Filter Chips
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Wrap(
+                spacing: 10,
+                children: [
+                  _buildFilterChip(context, "Hiking"),
+                  _buildFilterChip(context, "Kayaking"),
+                  _buildFilterChip(context, "Biking"),
+                ],
+              ),
+            ),
+          ),
+
+          // 🗺️ Destination Cards
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverGrid(
@@ -83,33 +100,25 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      // 🟩 Book Now button
+      // 🟨 Book Now Button
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: const Color(0xFFBFD75A),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
           onPressed: () {},
-          child: const Text(
-            'Book Now',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          child: const Text('Book Now'),
         ),
       ),
     );
   }
 
-  Widget _buildFilterChip(String label) {
+  Widget _buildFilterChip(BuildContext context, String label) {
     return Chip(
-      backgroundColor: const Color(0xFFE6F0C8),
       label: Text(
         label,
-        style: GoogleFonts.poppins(fontSize: 14),
+        style: GoogleFonts.poppins(
+          fontSize: 14,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
     );
   }

@@ -22,10 +22,13 @@ class _DestinationPageState extends State<DestinationPage>
   late final Animation<Offset> _textOffset;
   late final Animation<double> _imageOpacity;
   late final Animation<double> _textOpacity;
+  bool isFavorited = false;
 
   @override
   void initState() {
     super.initState();
+    isFavorited = FavoritesManager.all.contains(widget.destination);
+
     _imageController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -39,20 +42,14 @@ class _DestinationPageState extends State<DestinationPage>
       begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
-      CurvedAnimation(
-        parent: _imageController,
-        curve: Curves.easeOut,
-      ),
+      CurvedAnimation(parent: _imageController, curve: Curves.easeOut),
     );
 
     _textOffset = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(
-      CurvedAnimation(
-        parent: _textController,
-        curve: Curves.easeOut,
-      ),
+      CurvedAnimation(parent: _textController, curve: Curves.easeOut),
     );
 
     _imageOpacity = CurvedAnimation(
@@ -66,7 +63,6 @@ class _DestinationPageState extends State<DestinationPage>
     );
 
     _imageController.forward();
-
     Future.delayed(const Duration(milliseconds: 400), () {
       if (mounted) _textController.forward();
     });
@@ -92,64 +88,89 @@ class _DestinationPageState extends State<DestinationPage>
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              SlideTransition(
-                position: _imageOffset,
-                child: FadeTransition(
-                  opacity: _imageOpacity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(
-                      destination.imagePath,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6F5F3), // 🌿 Spring Wood
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                SlideTransition(
+                  position: _imageOffset,
+                  child: FadeTransition(
+                    opacity: _imageOpacity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        destination.imagePath,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              SlideTransition(
-                position: _textOffset,
-                child: FadeTransition(
-                  opacity: _textOpacity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                const SizedBox(height: 20),
+                SlideTransition(
+                  position: _textOffset,
+                  child: FadeTransition(
+                    opacity: _textOpacity,
                     child: Text(
                       destination.description ?? "No description yet...",
                       style: const TextStyle(
                         fontSize: 16,
                         height: 1.5,
+                        color: Color(0xFF242B38), // 🖤 Ebony Clay
                       ),
                       textAlign: TextAlign.justify,
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton.icon(
-                onPressed: () {
-                  FavoritesManager.add(destination);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${destination.title} added to favorites'),
-                      duration: const Duration(seconds: 2),
+                const SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (!isFavorited) {
+                      FavoritesManager.add(widget.destination);
+                      setState(() {
+                        isFavorited = true;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${widget.destination.title} added to favorites'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  icon: Icon(
+                    isFavorited ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    isFavorited ? 'Added to Favorites' : 'Add to Favorites',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isFavorited
+                        ? const Color(0xFF3A8FB7) // 💙 Celestial Blue
+                        : const Color(0xFFFFB84D), // 🧡 Amber Glow
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  );
-                },
-                icon: const Icon(Icons.favorite_border),
-                label: const Text('Add to Favorites'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
