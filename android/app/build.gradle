@@ -2,9 +2,7 @@ plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
-    id 'com.google.gms.google-services'
 }
-
 
 android {
     namespace = "com.example.travel_and_tours"
@@ -41,8 +39,12 @@ flutter {
 
 dependencies {
     // Firebase BoM handles versioning
-    implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
+    implementation platform("com.google.firebase:firebase-bom:34.2.0")
 
     // Firebase features you use
-    implementation("com.google.firebase:firebase-auth")
+    implementation "com.google.firebase:firebase-auth"
+    implementation "com.google.firebase:firebase-analytics" // optional but recommended
 }
+
+// 👇 This MUST be the very last line
+apply plugin: 'com.google.gms.google-services'
