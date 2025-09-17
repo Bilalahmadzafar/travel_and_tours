@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:8.3.2" // Android Gradle Plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0" // Kotlin plugin to match Firebase Auth
-        classpath "com.google.gms:google-services:4.4.2" // Google Services
+        classpath "com.google.gms:google-services:4.4.3" // Google Services
     }
 }
 
